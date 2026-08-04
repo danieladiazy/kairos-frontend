@@ -35,7 +35,7 @@ export function Footer() {
           <ul className="space-y-2 text-xs">
             <li className="flex items-center gap-2 text-muted-foreground"><Mail className="h-4 w-4" /><a href="mailto:hola@kairos.com" className="hover:text-foreground transition-colors">hola@kairos.com</a></li>
             <li className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /><a href="tel:+525512345678" className="hover:text-foreground transition-colors">+52 55 1234 5678</a></li>
-            <li className="flex items-start gap-2 text-muted-foreground"><MapPin className="h-4 w-4 mt-0.5" /><span>Ciudad de México, México</span></li>
+            <li className="flex items-start gap-2 text-muted-foreground"><MapPin className="h-4 w-4 mt-0.5" /><span>Mazatlán, Sinaloa, México</span></li>
           </ul>
         </div>
       </div>

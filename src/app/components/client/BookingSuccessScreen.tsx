@@ -24,7 +24,7 @@ export function BookingSuccessScreen({ bookingData, onGoHome, onViewAppointments
   return (
     <div className="h-full flex flex-col bg-background overflow-hidden">
       <div className="flex-1 overflow-y-auto min-h-0">
-        <div className="max-w-2xl mx-auto px-6 py-10 space-y-6">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-6">
 
           {/* Hero de éxito */}
           <div className="flex flex-col items-center text-center space-y-4">
@@ -80,7 +80,7 @@ export function BookingSuccessScreen({ bookingData, onGoHome, onViewAppointments
 
             {/* Detalles */}
             <div className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2.5 rounded-xl bg-primary/10">
                     <Calendar className="h-5 w-5 text-primary" />

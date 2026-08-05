@@ -29,7 +29,7 @@ export function DashboardScreen({ onOpenAgenda }: { onOpenAgenda: () => void }) 
     };
   }, [citas, servicios, today]);
 
-  if (loading) return <div className="p-8 flex gap-2"><Loader2 className="animate-spin" />Cargando resumen...</div>;
+  if (loading) return <div className="p-4 sm:p-8 flex gap-2"><Loader2 className="animate-spin" />Cargando resumen...</div>;
 
   const stats = [
     { icon: Calendar, label: "Citas hoy", value: data.today },
@@ -39,13 +39,13 @@ export function DashboardScreen({ onOpenAgenda }: { onOpenAgenda: () => void }) 
     { icon: DollarSign, label: "Ingresos completados", value: `$${data.income.toFixed(2)}` },
   ];
 
-  return <div className="p-8 max-w-7xl mx-auto space-y-8">
+  return <div className="p-4 sm:p-8 max-w-7xl mx-auto space-y-8">
     <div><h1>Resumen del negocio</h1><p className="text-muted-foreground">Consulta la actividad reciente de tu negocio.</p></div>
     {error ? <p className="text-destructive">{error}</p> : <>
       <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">{stats.map((stat, index) => { const Icon = stat.icon; return <div key={index} className="bg-card border rounded-xl p-5"><Icon className="text-primary" /><p className="text-sm text-muted-foreground mt-3">{stat.label}</p><p className="text-2xl">{stat.value}</p></div>; })}</div>
       <section className="bg-card border rounded-xl p-6">
-        <div className="flex justify-between mb-4"><h2>Próximas citas</h2><button onClick={onOpenAgenda} className="text-primary">Abrir agenda</button></div>
-        {data.next.length ? <div className="space-y-3">{data.next.slice(0, 6).map((cita) => <button key={cita.id} onClick={onOpenAgenda} className="w-full text-left p-4 rounded-lg bg-muted/50 flex justify-between"><div><p>{cita.cliente?.nombre}</p><p className="text-sm text-muted-foreground">{cita.servicio?.nombre}</p></div><div className="text-right"><p>{cita.fecha}</p><p className="text-sm text-muted-foreground">{cita.hora.slice(0, 5)}</p></div></button>)}</div> : <p className="text-muted-foreground">No tienes citas próximas.</p>}
+        <div className="flex justify-between gap-3 mb-4"><h2>Próximas citas</h2><button onClick={onOpenAgenda} className="shrink-0 text-primary">Abrir agenda</button></div>
+        {data.next.length ? <div className="space-y-3">{data.next.slice(0, 6).map((cita) => <button key={cita.id} onClick={onOpenAgenda} className="w-full text-left p-4 rounded-lg bg-muted/50 flex flex-col gap-2 sm:flex-row sm:justify-between"><div className="min-w-0"><p className="truncate">{cita.cliente?.nombre}</p><p className="truncate text-sm text-muted-foreground">{cita.servicio?.nombre}</p></div><div className="shrink-0 sm:text-right"><p>{cita.fecha}</p><p className="text-sm text-muted-foreground">{cita.hora.slice(0, 5)}</p></div></button>)}</div> : <p className="text-muted-foreground">No tienes citas próximas.</p>}
       </section>
     </>}
   </div>;

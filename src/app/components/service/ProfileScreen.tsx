@@ -34,10 +34,10 @@ export function ProfileScreen() {
     finally { setSaving(false); }
   };
 
-  return <div className="h-screen overflow-auto p-8 bg-background"><div className="max-w-4xl mx-auto space-y-6">
+  return <div className="h-full overflow-auto p-4 sm:p-8 bg-background"><div className="max-w-4xl mx-auto space-y-6">
     <div><h1>Mi Perfil</h1><p className="text-muted-foreground">Completa nombre, categoría y teléfono para activar servicios.</p></div>
-    <div className="bg-card rounded-xl border border-border p-6 space-y-5">
-      <div className="flex gap-5 items-center">{f.imagenUrl ? <img src={f.imagenUrl} className="w-24 h-24 rounded-xl object-cover"/> : <div className="w-24 h-24 bg-primary/10 rounded-xl"/>}<label className="text-primary cursor-pointer flex gap-2"><Upload className="h-4 w-4"/>Subir imagen<input type="file" accept="image/*" onChange={file} className="hidden"/></label></div>
+    <div className="bg-card rounded-xl border border-border p-4 sm:p-6 space-y-5">
+      <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">{f.imagenUrl ? <img src={f.imagenUrl} className="w-24 h-24 rounded-xl object-cover"/> : <div className="w-24 h-24 bg-primary/10 rounded-xl"/>}<label className="text-primary cursor-pointer flex gap-2"><Upload className="h-4 w-4"/>Subir imagen<input type="file" accept="image/*" onChange={file} className="hidden"/></label></div>
       <div><label>Enlace de imagen</label><input value={f.imagenUrl} onChange={(e) => set("imagenUrl", e.target.value)} className="w-full px-4 py-3 rounded-lg border border-border bg-input-background"/></div>
       <div className="grid md:grid-cols-2 gap-5">
         <div><label>Nombre del negocio <span className="text-destructive">*</span></label><input value={f.nombre} onChange={(e) => set("nombre", e.target.value)} className="w-full px-4 py-3 rounded-lg border border-border bg-input-background"/></div>
@@ -46,7 +46,7 @@ export function ProfileScreen() {
         <div><label>Dirección</label><input value={f.direccion} onChange={(e) => set("direccion", e.target.value)} className="w-full px-4 py-3 rounded-lg border border-border bg-input-background"/></div>
       </div>
       <div><label>Descripción</label><textarea value={f.descripcion} onChange={(e) => set("descripcion", e.target.value)} className="w-full px-4 py-3 rounded-lg border border-border bg-input-background" rows={4}/></div>
-      <button onClick={save} disabled={saving} className="ml-auto flex gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground"><Save className="h-5 w-5"/>{saving ? "Guardando..." : "Guardar cambios"}</button>
+      <button onClick={save} disabled={saving} className="w-full sm:w-auto sm:ml-auto flex justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground"><Save className="h-5 w-5"/>{saving ? "Guardando..." : "Guardar cambios"}</button>
     </div>
   </div></div>;
 }

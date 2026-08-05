@@ -14,7 +14,7 @@ interface Props {
 export function ConfirmDialog({ open, title, description, confirmLabel, onCancel, onConfirm, busy = false, destructive = false }: Props) {
   if (!open) return null;
   return <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/50 p-4" onClick={busy ? undefined : onCancel}>
-    <div role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" className="w-full max-w-sm rounded-2xl border bg-card p-6 shadow-2xl" onClick={(event) => event.stopPropagation()}>
+    <div role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" className="w-full max-w-sm rounded-2xl border bg-card p-5 sm:p-6 shadow-2xl" onClick={(event) => event.stopPropagation()}>
       <div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-full ${destructive ? "bg-destructive/10 text-destructive" : "bg-yellow-100 text-yellow-700"}`}><AlertTriangle className="h-5 w-5" /></div>
       <h2 id="confirm-title" className="mb-2">{title}</h2>
       <p className="text-sm text-muted-foreground">{description}</p>

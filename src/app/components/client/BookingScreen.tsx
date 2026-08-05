@@ -116,10 +116,10 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
   };
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+    <div className="h-full flex flex-col bg-background overflow-hidden">
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-card rounded-2xl border border-border p-8 max-w-md w-full mx-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="max-h-[94dvh] overflow-y-auto bg-card rounded-2xl border border-border p-5 sm:p-8 max-w-md w-full shadow-2xl">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
                 <CheckCircle2 className="h-10 w-10 text-green-600" />
@@ -194,7 +194,7 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
         </div>
       )}
 
-      <header className="bg-card border-b border-border px-6 py-4 flex-shrink-0">
+      <header className="bg-card border-b border-border px-4 sm:px-6 py-4 flex-shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="p-2 rounded-lg hover:bg-muted transition-colors">
             <ArrowLeft className="h-5 w-5" />
@@ -207,8 +207,8 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
       </header>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="p-6 max-w-4xl mx-auto space-y-6">
-          <div className="bg-card rounded-xl border border-border p-6">
+        <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6">
+          <div className="bg-card rounded-xl border border-border p-4 sm:p-6">
             <h3 className="mb-2">Servicio seleccionado</h3>
             <div className="flex items-center justify-between p-4 rounded-lg border-2 border-primary bg-primary/5">
               <div>
@@ -219,7 +219,7 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
             </div>
           </div>
 
-          <div className="bg-card rounded-xl border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-4 sm:p-6">
             <h3 className="mb-4">Selecciona una Fecha</h3>
             <input
               type="date"
@@ -230,14 +230,14 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
             />
           </div>
 
-          <div className="bg-card rounded-xl border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-4 sm:p-6">
             <h3 className="mb-4">Notas para el negocio (opcional)</h3>
             <textarea value={notas} onChange={e=>setNotas(e.target.value)} maxLength={300} className="w-full min-h-24 p-3 border rounded-lg" placeholder="Indicaciones o comentarios"/>
           </div>
 
-          <div className="bg-card rounded-xl border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-4 sm:p-6">
             <h3 className="mb-4">Selecciona un Horario</h3>
-            {selectedDate && availableTimes.length === 0 ? <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">El servicio no abre en la fecha seleccionada. Elige otro día.</div> : <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+            {selectedDate && availableTimes.length === 0 ? <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">El servicio no abre en la fecha seleccionada. Elige otro día.</div> : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
               {availableTimes.map((time) => (
                 <button
                   key={time}
@@ -254,7 +254,7 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
             </div>}
           </div>
 
-          <div className="bg-card rounded-xl border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-4 sm:p-6">
             <h3 className="mb-4">Resumen de la Reserva</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between pb-3 border-b border-border">

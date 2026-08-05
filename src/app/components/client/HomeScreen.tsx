@@ -31,9 +31,9 @@ export function HomeScreen({ onNavigate, isLoggedIn, onNavigateToLogin, onShowHe
   };
 
   return <div className="h-full overflow-y-auto bg-background">
-    <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 px-6 py-14">
+    <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 px-4 py-9 sm:px-6 sm:py-14">
       <div className="max-w-5xl mx-auto text-center space-y-6">
-        <div><h1 className="text-4xl">Encuentra servicios cerca de ti</h1><p className="text-muted-foreground mt-3">Descubre opciones para cuidar de ti y aprovechar mejor tu tiempo.</p></div>
+        <div><h1 className="text-3xl sm:text-4xl">Encuentra servicios cerca de ti</h1><p className="text-muted-foreground mt-3">Descubre opciones para cuidar de ti y aprovechar mejor tu tiempo.</p></div>
         <form onSubmit={buscar} className="max-w-2xl mx-auto relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
           <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="¿Qué servicio buscas?" className="w-full pl-12 pr-28 py-4 rounded-xl border bg-card shadow-sm"/>
@@ -43,8 +43,8 @@ export function HomeScreen({ onNavigate, isLoggedIn, onNavigateToLogin, onShowHe
       </div>
     </section>
 
-    <main className="max-w-7xl mx-auto p-6 space-y-8">
-      <div className="flex items-end justify-between"><div><h2>Servicios disponibles</h2><p className="text-muted-foreground">Encuentra una opción que se adapte a ti</p></div><button onClick={()=>onNavigate("search")} className="flex items-center gap-2 text-primary">Ver todos <ArrowRight className="h-4 w-4"/></button></div>
+    <main className="max-w-7xl mx-auto p-4 sm:p-6 space-y-8">
+      <div className="flex items-end justify-between gap-4"><div><h2>Servicios disponibles</h2><p className="text-muted-foreground">Encuentra una opción que se adapte a ti</p></div><button onClick={()=>onNavigate("search")} className="shrink-0 flex items-center gap-2 text-primary">Ver todos <ArrowRight className="h-4 w-4"/></button></div>
       {loading && <div className="py-16 flex justify-center gap-2 text-muted-foreground"><Loader2 className="animate-spin"/>Cargando servicios...</div>}
       {error && <div className="border border-destructive/30 bg-destructive/10 rounded-xl p-6 text-center"><p className="text-destructive">{error}</p><button onClick={()=>location.reload()} className="mt-3 underline">Intentar de nuevo</button></div>}
       {!loading && !error && servicios.length === 0 && <div className="border rounded-xl p-12 text-center text-muted-foreground">Todavía no hay servicios activos publicados.</div>}

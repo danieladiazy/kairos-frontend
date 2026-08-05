@@ -8,7 +8,7 @@ const legalLinks = ["Términos de servicio", "Política de privacidad", "Cookies
 
 export function Footer() {
   return <footer className="w-full bg-card border-t border-border mt-auto">
-    <div className="container mx-auto px-6 py-6">
+    <div className="container mx-auto px-4 sm:px-6 py-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div>
           <KairosBrand size="sm" className="mb-3" />

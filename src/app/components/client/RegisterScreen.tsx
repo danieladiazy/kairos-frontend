@@ -71,7 +71,7 @@ export function RegisterScreen({ onRegister, onBackToLogin, clientOnly = false }
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10">
+    <div className="min-h-[100dvh] w-full flex items-start sm:items-center justify-center overflow-y-auto bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-4">
       <div className="w-full max-w-md p-4">
         <div className="bg-card rounded-2xl border border-border p-6 shadow-lg">
           <button

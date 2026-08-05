@@ -11,6 +11,7 @@ import { ComingSoonScreen } from "./ComingSoonScreen";
 import { ConfirmDialog } from "../ConfirmDialog";
 import { FaqDialog } from "../FaqDialog";
 import { KairosBrand } from "../KairosBrand";
+import { MobileBottomNav, MobileTopBar } from "../MobileNavigation";
 import type { Negocio, Servicio } from "../../lib/api";
 import { obtenerServicio, obtenerSesion } from "../../lib/api";
 import { toast } from "sonner";
@@ -153,9 +154,14 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
   };
 
   return (
-    <div className="h-screen flex bg-background overflow-hidden">
+    <div className="h-[100dvh] lg:h-screen flex flex-col lg:flex-row bg-background overflow-hidden">
+      <MobileTopBar
+        subtitle={isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
+        onHelp={() => setShowHelp(true)}
+        onLogout={isLoggedIn ? () => setConfirmLogout(true) : undefined}
+      />
       {/* Sidebar estático */}
-      <div className="h-full w-56 bg-card border-r border-border flex flex-col flex-shrink-0">
+      <div className="hidden h-full w-56 bg-card border-r border-border lg:flex flex-col flex-shrink-0">
         {/* Logo */}
         <div className="p-5 border-b border-border flex-shrink-0">
           <KairosBrand size="md" />
@@ -212,9 +218,11 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
       </div>
 
       {/* Contenido principal */}
-      <div className="flex-1 overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden">
         {renderContent()}
       </div>
+
+      <MobileBottomNav items={navItems} active={activeSidebarItem} onNavigate={navigate} />
 
       {showHelp && <FaqDialog audience="cliente" onClose={() => setShowHelp(false)} />}
       <ConfirmDialog open={confirmLogout} title="¿Cerrar sesión?" description="Tendrás que iniciar sesión nuevamente para consultar y administrar tus citas." confirmLabel="Cerrar sesión" destructive onCancel={() => setConfirmLogout(false)} onConfirm={onLogout} />

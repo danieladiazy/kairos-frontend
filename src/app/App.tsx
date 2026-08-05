@@ -45,7 +45,7 @@ export default function App() {
 
   if (currentScreen === "forgot-password") {
     return (
-      <div className="h-screen overflow-hidden">
+      <div className="min-h-[100dvh] overflow-y-auto lg:h-screen lg:overflow-hidden">
         <Toaster position="top-right" richColors closeButton />
         <ForgotPasswordScreen onBack={() => setCurrentScreen("login")} />
       </div>
@@ -54,7 +54,7 @@ export default function App() {
 
   if (currentScreen === "login") {
     return (
-      <div className="h-screen overflow-hidden">
+      <div className="min-h-[100dvh] overflow-y-auto lg:h-screen lg:overflow-hidden">
         <Toaster position="top-right" richColors closeButton />
         <LoginScreen
           onLogin={handleLogin}
@@ -68,7 +68,7 @@ export default function App() {
 
   if (currentScreen === "register") {
     return (
-      <div className="h-screen overflow-hidden">
+      <div className="min-h-[100dvh] overflow-y-auto lg:h-screen lg:overflow-hidden">
         <Toaster position="top-right" richColors closeButton />
         <RegisterScreen
           onRegister={handleLogin}
@@ -83,7 +83,7 @@ export default function App() {
   // Este respaldo también cubre rutas internas o estados restaurados del navegador.
   if (!isLoggedIn) {
     return (
-      <div className="h-screen overflow-hidden">
+      <div className="min-h-[100dvh] overflow-y-auto lg:h-screen lg:overflow-hidden">
         <Toaster position="top-right" richColors closeButton />
         <LoginScreen
           onLogin={handleLogin}
@@ -97,7 +97,7 @@ export default function App() {
 
   if (currentScreen === "service-dashboard" && isLoggedIn && userType === 'service') {
     return (
-      <div className="h-screen overflow-hidden">
+      <div className="h-[100dvh] overflow-hidden lg:h-screen">
         <Toaster position="top-right" richColors closeButton />
         <ServiceDashboard onLogout={handleLogout} />
       </div>
@@ -105,7 +105,7 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-[100dvh] overflow-hidden lg:h-screen">
       <Toaster position="top-right" richColors closeButton />
       <ClientDashboard
         isLoggedIn={isLoggedIn}

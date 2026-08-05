@@ -139,9 +139,9 @@ function ServiceModal({ title, initial, onSave, onClose }: {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-card rounded-2xl border w-full max-w-3xl max-h-[94vh] flex flex-col shadow-2xl">
-        <div className="flex justify-between items-center p-6 border-b"><div><h3>{title}</h3><p className="text-sm text-muted-foreground">Configura la información y disponibilidad semanal.</p></div><button onClick={onClose} className="p-2 rounded-lg hover:bg-muted"><X /></button></div>
-        <div className="overflow-y-auto p-6 space-y-5">
+      <div className="bg-card rounded-2xl border w-full max-w-3xl max-h-[96dvh] sm:max-h-[94vh] flex flex-col shadow-2xl">
+        <div className="flex justify-between items-start gap-3 p-4 sm:p-6 border-b"><div><h3>{title}</h3><p className="text-sm text-muted-foreground">Configura la información y disponibilidad semanal.</p></div><button onClick={onClose} className="shrink-0 p-2 rounded-lg hover:bg-muted"><X /></button></div>
+        <div className="overflow-y-auto p-4 sm:p-6 space-y-5">
           <div className="flex items-center gap-4">{form.imageUrl ? <img src={form.imageUrl} alt="Vista previa" className="w-20 h-20 rounded-xl object-cover" /> : <div className="w-20 h-20 rounded-xl border-2 border-dashed flex items-center justify-center"><ImagePlus /></div>}<label className="text-primary cursor-pointer">Subir desde dispositivo<input type="file" accept="image/*" onChange={handleFile} className="hidden" /></label></div>
           <input placeholder="Enlace de imagen (FUERA DE SERVICIO)" value={form.imageUrl} onChange={(event) => setForm({ ...form, imageUrl: event.target.value })} className="w-full px-4 py-3 rounded-lg border bg-input-background" />
           <div><label>Nombre del servicio *</label><input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="w-full px-4 py-3 rounded-lg border bg-input-background" />{errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}</div>
@@ -154,7 +154,7 @@ function ServiceModal({ title, initial, onSave, onClose }: {
             <div className="divide-y">
               {DAYS.map((day) => {
                 const schedule = form.schedules[day.value];
-                return <div key={day.value} className="grid grid-cols-[100px_1fr] sm:grid-cols-[130px_1fr] items-center gap-3 p-3"><label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={schedule.active} onChange={(event) => updateDay(day.value, { active: event.target.checked })} />{day.label}</label>{schedule.active ? <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-center"><input aria-label={`Apertura ${day.label}`} type="time" value={schedule.start} onChange={(event) => updateDay(day.value, { start: event.target.value })} className="px-3 py-2 rounded-lg border bg-input-background" /><span className="text-muted-foreground text-sm">a</span><input aria-label={`Cierre ${day.label}`} type="time" value={schedule.end} onChange={(event) => updateDay(day.value, { end: event.target.value })} className="px-3 py-2 rounded-lg border bg-input-background" /></div> : <span className="text-sm text-muted-foreground">Cerrado</span>}</div>;
+                return <div key={day.value} className="flex flex-col items-stretch gap-3 p-3 sm:grid sm:grid-cols-[130px_1fr] sm:items-center"><label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={schedule.active} onChange={(event) => updateDay(day.value, { active: event.target.checked })} />{day.label}</label>{schedule.active ? <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-2 items-center"><input aria-label={`Apertura ${day.label}`} type="time" value={schedule.start} onChange={(event) => updateDay(day.value, { start: event.target.value })} className="min-w-0 w-full px-2 sm:px-3 py-2 rounded-lg border bg-input-background" /><span className="text-muted-foreground text-sm">a</span><input aria-label={`Cierre ${day.label}`} type="time" value={schedule.end} onChange={(event) => updateDay(day.value, { end: event.target.value })} className="min-w-0 w-full px-2 sm:px-3 py-2 rounded-lg border bg-input-background" /></div> : <span className="text-sm text-muted-foreground">Cerrado</span>}</div>;
               })}
             </div>
           </section>
@@ -163,7 +163,7 @@ function ServiceModal({ title, initial, onSave, onClose }: {
           <label className="flex items-center justify-between p-4 rounded-lg bg-muted/50"><span><b>Servicio a domicilio</b><small className="block text-muted-foreground">El cliente deberá tener una dirección registrada.</small></span><input type="checkbox" checked={form.atHome} onChange={(event) => setForm({ ...form, atHome: event.target.checked })} /></label>
           <label className="flex items-center justify-between p-4 rounded-lg bg-muted/50"><span><b>Servicio activo</b><small className="block text-muted-foreground">Visible y disponible para reservar.</small></span><input type="checkbox" checked={form.active} onChange={(event) => setForm({ ...form, active: event.target.checked })} /></label>
         </div>
-        <div className="flex gap-3 p-6 border-t"><button onClick={onClose} className="flex-1 py-3 rounded-lg border">Cancelar</button><button onClick={submit} className="flex-1 py-3 rounded-lg bg-primary text-primary-foreground flex justify-center items-center gap-2"><Save className="h-4 w-4" />Guardar servicio</button></div>
+        <div className="flex flex-col-reverse sm:flex-row gap-3 p-4 sm:p-6 border-t"><button onClick={onClose} className="flex-1 py-3 rounded-lg border">Cancelar</button><button onClick={submit} className="flex-1 py-3 rounded-lg bg-primary text-primary-foreground flex justify-center items-center gap-2"><Save className="h-4 w-4" />Guardar servicio</button></div>
       </div>
     </div>
   );
@@ -208,7 +208,7 @@ export function ServicesScreen() {
   };
 
   const formFor = (service: Service): ServiceFormData => ({ ...service, price: String(service.price), schedules: structuredClone(service.schedules) });
-  return <div className="h-screen overflow-auto bg-background p-5 sm:p-8">
+  return <div className="h-full overflow-auto bg-background p-4 sm:p-8">
     {modal && <ServiceModal title={modal.mode === "add" ? "Agregar servicio" : "Editar servicio"} initial={modal.mode === "edit" ? formFor(modal.service) : emptyForm()} onSave={save} onClose={() => setModal(null)} />}
     {deleteId !== null && <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"><div className="bg-card p-6 rounded-xl space-y-4"><h3>¿Eliminar servicio?</h3><p className="text-sm text-muted-foreground">Esta acción también eliminará su disponibilidad configurada.</p><div className="flex gap-3"><button onClick={() => setDeleteId(null)} className="px-4 py-2 border rounded-lg">Cancelar</button><button onClick={() => remove(deleteId)} className="px-4 py-2 bg-destructive text-white rounded-lg">Eliminar</button></div></div></div>}
     <div className="max-w-7xl mx-auto space-y-6"><div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4"><div><h1>Mis servicios</h1><p className="text-muted-foreground">Administra tus servicios, horarios y disponibilidad.</p></div><button onClick={() => setModal({ mode: "add" })} className="self-start inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground"><Plus className="h-4 w-4" />Agregar servicio</button></div>

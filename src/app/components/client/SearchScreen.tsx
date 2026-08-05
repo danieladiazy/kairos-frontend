@@ -44,7 +44,7 @@ export function SearchScreen({ isLoggedIn, onNavigate, onNavigateToService, onBo
   };
 
   return <div className="h-full flex flex-col bg-background overflow-hidden">
-    <form onSubmit={submit} className="bg-card border-b px-6 py-4">
+    <form onSubmit={submit} className="bg-card border-b px-4 sm:px-6 py-4">
       <div className="relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <input value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Buscar servicios..." className="w-full pl-12 pr-28 py-3 rounded-lg border" />
@@ -52,7 +52,7 @@ export function SearchScreen({ isLoggedIn, onNavigate, onNavigateToService, onBo
       </div>
     </form>
     <main className="flex-1 overflow-y-auto">
-      <div className="p-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-7xl mx-auto">
         {loading ? <div className="py-12 flex justify-center gap-2"><Loader2 className="animate-spin" />Cargando servicios...</div>
           : error ? <div className="p-8 border border-destructive/30 rounded-xl text-center text-destructive">{error}</div>
           : <>

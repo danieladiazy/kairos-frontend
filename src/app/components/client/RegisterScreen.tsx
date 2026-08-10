@@ -86,7 +86,7 @@ export function RegisterScreen({ onRegister, onBackToLogin, clientOnly = false }
       : "Únete a Kairós y comienza a agendar";
 
   return (
-    <div className="min-h-[100dvh] w-full flex items-start sm:items-center justify-center overflow-y-auto bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-4">
+    <div className="min-h-[100dvh] w-full flex items-start justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-4 lg:py-8">
       <div className="w-full max-w-lg p-4">
         <div className="bg-card rounded-2xl border border-border p-6 shadow-lg">
           <button onClick={onBackToLogin} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4">

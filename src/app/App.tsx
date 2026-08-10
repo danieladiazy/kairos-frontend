@@ -35,6 +35,10 @@ export default function App() {
     return () => window.removeEventListener("kairos:sesion-expirada", sesionExpirada);
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [currentScreen]);
+
   const handleLogin = (type: TipoAcceso) => {
     setLoginClientOnly(false);
     setIsLoggedIn(true);
@@ -80,7 +84,7 @@ export default function App() {
 
   if (currentScreen === "register") {
     return (
-      <div className="min-h-[100dvh] overflow-y-auto lg:h-screen lg:overflow-hidden">
+      <div className="min-h-[100dvh] overflow-y-auto">
         <Toaster position="top-right" richColors closeButton />
         <RegisterScreen
           onRegister={handleLogin}

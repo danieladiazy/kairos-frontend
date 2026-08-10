@@ -16,6 +16,7 @@ import type { Negocio, Servicio } from "../../lib/api";
 import { obtenerServicio, obtenerSesion } from "../../lib/api";
 import { toast } from "sonner";
 import { FOOTER_CATEGORY_EVENT, FOOTER_COMING_SOON_EVENT } from "../../lib/navigationEvents";
+import { esClienteEmpresa } from "../../lib/pricing";
 
 interface ClientDashboardProps {
   isLoggedIn: boolean;
@@ -36,6 +37,7 @@ interface BookingData {
 }
 
 export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: ClientDashboardProps) {
+  const clienteAsociado = esClienteEmpresa(obtenerSesion().rol);
   const [activePanel, setActivePanel] = useState<ClientPanel>("home");
   const [prevPanel, setPrevPanel] = useState<ClientPanel>("home");
   const [showHelp, setShowHelp] = useState(false);
@@ -114,7 +116,7 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
   const renderContent = () => {
     switch (activePanel) {
       case "search":
-        return <SearchScreen isLoggedIn={isLoggedIn} onNavigate={navigate} onNavigateToService={(id) => { setSelectedServicioId(id); navigate("service-detail"); }} onBookService={(servicio) => openBooking(servicio)} category={searchCategory} onClearCategory={() => setSearchCategory("")} />;
+        return <SearchScreen isLoggedIn={isLoggedIn} clienteAsociado={clienteAsociado} onNavigate={navigate} onNavigateToService={(id) => { setSelectedServicioId(id); navigate("service-detail"); }} onBookService={(servicio) => openBooking(servicio)} category={searchCategory} onClearCategory={() => setSearchCategory("")} />;
       case "appointments":
         return <AppointmentsScreen onNavigate={navigate} onNavigateToService={(id) => { setSelectedServicioId(id); navigate("service-detail"); }} onBookAgain={(servicio, negocio) => openBooking(servicio, negocio)} />;
       case "profile":
@@ -126,6 +128,7 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
             onBack={goBack}
             onBooking={(servicio, negocio) => { setServicioParaReservar(servicio); setNegocioParaReservar(negocio); navigate("booking"); }}
             isLoggedIn={isLoggedIn}
+            clienteAsociado={clienteAsociado}
             onNavigate={navigate}
           />
         );
@@ -134,6 +137,7 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
           <BookingScreen
             servicio={servicioParaReservar}
             negocio={negocioParaReservar}
+            clienteAsociado={clienteAsociado}
             onBack={goBack}
             onConfirm={handleBookingConfirm}
           />
@@ -149,14 +153,14 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
       case "coming-soon":
         return <ComingSoonScreen title={comingSoonTitle} onBack={goBack} />;
       default:
-        return <HomeScreen isLoggedIn={isLoggedIn} onNavigate={navigate} onNavigateToLogin={() => onNavigateToLogin(false)} onShowHelp={() => setShowHelp(true)} onNavigateToService={(id) => { setSelectedServicioId(id); navigate("service-detail"); }} />;
+        return <HomeScreen isLoggedIn={isLoggedIn} clienteAsociado={clienteAsociado} onNavigate={navigate} onNavigateToLogin={() => onNavigateToLogin(false)} onShowHelp={() => setShowHelp(true)} onNavigateToService={(id) => { setSelectedServicioId(id); navigate("service-detail"); }} />;
     }
   };
 
   return (
     <div className="h-[100dvh] lg:h-screen flex flex-col lg:flex-row bg-background overflow-hidden">
       <MobileTopBar
-        subtitle={isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
+        subtitle={clienteAsociado ? "Cliente empresarial · 10% de descuento" : isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
         onHelp={() => setShowHelp(true)}
         onLogout={isLoggedIn ? () => setConfirmLogout(true) : undefined}
       />
@@ -166,7 +170,7 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
         <div className="p-5 border-b border-border flex-shrink-0">
           <KairosBrand size="md" />
           <p className="text-sm text-muted-foreground mt-1 truncate">
-            {isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
+            {clienteAsociado ? "Cuenta empresarial · 10% menos" : isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
           </p>
         </div>
 

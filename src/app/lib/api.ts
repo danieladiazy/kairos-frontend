@@ -114,7 +114,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 // si en una pantalla se intenta leer "servicio.nombree" con doble "e",
 // TypeScript avisa antes de siquiera correr la app).
 
-export type Rol = "CLIENTE" | "NEGOCIO";
+export type Rol = "CLIENTE" | "NEGOCIO" | "CLIENTEEMPRESA";
+export type TipoAcceso = "client" | "company-client" | "service";
 export type EstadoCita = "PENDIENTE" | "CONFIRMADA" | "CANCELADA" | "COMPLETADA";
 
 export interface AuthResponse {
@@ -132,6 +133,7 @@ export interface Negocio {
   direccion?: string;
   telefono?: string;
   imagenUrl?: string;
+  horarios?: HorarioServicio[];
 }
 
 export type DiaSemana = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
@@ -164,7 +166,7 @@ export interface Cita {
   estado: EstadoCita;
   notas?: string;
   servicio?: Servicio;
-  cliente?: { id: number; nombre: string };
+  cliente?: { id: number; nombre: string; rol?: Rol };
 }
 
 // ---------- Autenticacion ----------
@@ -233,6 +235,7 @@ export function guardarMiNegocio(datos: {
   direccion?: string;
   telefono?: string;
   imagenUrl?: string;
+  horarios?: HorarioServicio[];
 }) {
   return request<Negocio>("/negocios/mi-negocio", {
     method: "POST",
@@ -274,7 +277,6 @@ export function crearServicio(datos: {
   activo?: boolean;
   imagenUrl?: string;
   aDomicilio?: boolean;
-  horarios?: HorarioServicio[];
 }) {
   return request<Servicio>("/servicios", {
     method: "POST",
@@ -291,7 +293,6 @@ export function actualizarServicio(id: number, datos: {
   activo?: boolean;
   imagenUrl?: string;
   aDomicilio?: boolean;
-  horarios?: HorarioServicio[];
 }) {
   return request<Servicio>(`/servicios/${id}`, {
     method: "PUT",

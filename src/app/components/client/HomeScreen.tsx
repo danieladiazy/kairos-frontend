@@ -1,17 +1,19 @@
 import { FormEvent, useEffect, useState } from "react";
-import { ArrowRight, Clock, Loader2, Search } from "lucide-react";
+import { ArrowRight, Building2, Clock, Loader2, Search } from "lucide-react";
 import { buscarServicios, type Servicio } from "../../lib/api";
+import { aplicarDescuentoEmpresa } from "../../lib/pricing";
 import { Footer } from "../Footer";
 
 interface Props {
   onNavigate: (screen:string) => void;
   isLoggedIn: boolean;
+  clienteAsociado: boolean;
   onNavigateToLogin?: () => void;
   onShowHelp?: () => void;
   onNavigateToService?: (id:number) => void;
 }
 
-export function HomeScreen({ onNavigate, isLoggedIn, onNavigateToLogin, onShowHelp, onNavigateToService }:Props) {
+export function HomeScreen({ onNavigate, isLoggedIn, clienteAsociado, onNavigateToLogin, onShowHelp, onNavigateToService }:Props) {
   const [servicios,setServicios] = useState<Servicio[]>([]);
   const [query,setQuery] = useState("");
   const [loading,setLoading] = useState(true);
@@ -33,7 +35,11 @@ export function HomeScreen({ onNavigate, isLoggedIn, onNavigateToLogin, onShowHe
   return <div className="h-full overflow-y-auto bg-background">
     <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 px-4 py-9 sm:px-6 sm:py-14">
       <div className="max-w-5xl mx-auto text-center space-y-6">
-        <div><h1 className="text-3xl sm:text-4xl">Encuentra servicios cerca de ti</h1><p className="text-muted-foreground mt-3">Descubre opciones para cuidar de ti y aprovechar mejor tu tiempo.</p></div>
+        <div>
+          {clienteAsociado && <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card px-4 py-2 text-sm text-primary shadow-sm"><Building2 className="h-4 w-4" />Cuenta asociada a empresa</div>}
+          <h1 className="text-3xl sm:text-4xl">{clienteAsociado ? "Bienvenido a tus beneficios empresariales" : "Encuentra servicios cerca de ti"}</h1>
+          <p className="text-muted-foreground mt-3">{clienteAsociado ? "Todos los servicios tienen 10% de descuento para tu cuenta." : "Descubre opciones para cuidar de ti y aprovechar mejor tu tiempo."}</p>
+        </div>
         <form onSubmit={buscar} className="max-w-2xl mx-auto relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
           <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="¿Qué servicio buscas?" className="w-full pl-12 pr-28 py-4 rounded-xl border bg-card shadow-sm"/>
@@ -50,7 +56,7 @@ export function HomeScreen({ onNavigate, isLoggedIn, onNavigateToLogin, onShowHe
       {!loading && !error && servicios.length === 0 && <div className="border rounded-xl p-12 text-center text-muted-foreground">Todavía no hay servicios activos publicados.</div>}
       {!loading && !error && servicios.length > 0 && <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">{servicios.map(servicio=><article key={servicio.id} className="h-full bg-card border rounded-xl overflow-hidden flex flex-col">
         {servicio.imagenUrl ? <img src={servicio.imagenUrl} alt={servicio.nombre} className="h-44 w-full object-cover"/> : <div aria-label="Servicio sin imagen" className="h-44 bg-muted"/>}
-        <div className="p-5 flex flex-1 flex-col gap-3"><div><h3 className="line-clamp-1">{servicio.nombre}</h3><p className="text-sm text-muted-foreground line-clamp-1">{servicio.categoria || "Otra"}</p></div><div className="flex justify-between text-sm"><span className="flex gap-1"><Clock className="h-4 w-4"/>{servicio.duracionMinutos} min</span><strong>${Number(servicio.precio).toFixed(2)} MXN</strong></div><button onClick={()=>onNavigateToService?.(servicio.id)} className="mt-auto w-full py-2 rounded-lg bg-primary text-primary-foreground">Ver detalles</button></div>
+        <div className="p-5 flex flex-1 flex-col gap-3"><div><h3 className="line-clamp-1">{servicio.nombre}</h3><p className="text-sm text-muted-foreground line-clamp-1">{servicio.categoria || "Otra"}</p></div><div className="flex items-end justify-between gap-3 text-sm"><span className="flex gap-1"><Clock className="h-4 w-4"/>{servicio.duracionMinutos} min</span>{clienteAsociado ? <span className="text-right"><span className="block text-xs text-muted-foreground line-through">${Number(servicio.precio).toFixed(2)}</span><strong className="text-primary">${aplicarDescuentoEmpresa(servicio.precio, true).toFixed(2)} MXN</strong></span> : <strong>${Number(servicio.precio).toFixed(2)} MXN</strong>}</div><button onClick={()=>onNavigateToService?.(servicio.id)} className="mt-auto w-full py-2 rounded-lg bg-primary text-primary-foreground">Ver detalles</button></div>
       </article>)}</div>}
       <div className="text-center"><button onClick={onShowHelp} className="text-sm text-muted-foreground hover:text-primary">¿Necesitas ayuda?</button></div>
       <Footer/>

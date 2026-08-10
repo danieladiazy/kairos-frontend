@@ -5,11 +5,13 @@ import { RegisterScreen } from "./components/client/RegisterScreen";
 import { ForgotPasswordScreen } from "./components/client/ForgotPasswordScreen";
 import { ClientDashboard } from "./components/client/ClientDashboard";
 import { ServiceDashboard } from "./components/service/ServiceDashboard";
-import { limpiarSesion, obtenerSesion } from "./lib/api";
+import { limpiarSesion, obtenerSesion, type TipoAcceso } from "./lib/api";
 
 export default function App() {
   const sesionInicial = obtenerSesion();
-  const rolValido = sesionInicial.rol === "CLIENTE" || sesionInicial.rol === "NEGOCIO";
+  const rolValido = sesionInicial.rol === "CLIENTE"
+    || sesionInicial.rol === "CLIENTEEMPRESA"
+    || sesionInicial.rol === "NEGOCIO";
   const [isLoggedIn, setIsLoggedIn] = useState(Boolean(sesionInicial.token && rolValido));
   const [userType, setUserType] = useState<'client' | 'service'>(sesionInicial.rol === "NEGOCIO" ? "service" : "client");
   const [currentScreen, setCurrentScreen] = useState(
@@ -33,13 +35,23 @@ export default function App() {
     return () => window.removeEventListener("kairos:sesion-expirada", sesionExpirada);
   }, []);
 
-  const handleLogin = (type: 'client' | 'service') => {
+  const handleLogin = (type: TipoAcceso) => {
     setLoginClientOnly(false);
     setIsLoggedIn(true);
-    setUserType(type);
+    setUserType(type === "service" ? "service" : "client");
     setCurrentScreen(type === 'service' ? "service-dashboard" : "home");
-    setTimeout(() => toast.success(type === 'service' ? "Bienvenido a tu panel" : "¡Bienvenido de vuelta!", {
-      description: type === 'service' ? "Accediste como negocio." : "Sesión iniciada correctamente.",
+    const titulo = type === "service"
+      ? "Bienvenido a tu panel"
+      : type === "company-client"
+        ? "Bienvenido a tus beneficios empresariales"
+        : "¡Bienvenido de vuelta!";
+    const descripcion = type === "service"
+      ? "Accediste como negocio."
+      : type === "company-client"
+        ? "Tu cuenta tiene 10% de descuento en los servicios."
+        : "Sesión iniciada correctamente.";
+    setTimeout(() => toast.success(titulo, {
+      description: descripcion,
     }), 300);
   };
 

@@ -7,9 +7,9 @@ const questions = {
     { q: "¿Dónde consulto los datos del negocio?", a: "Pulsa Ver detalles para consultar su información, ubicación y disponibilidad." },
   ],
   negocio: [
-    { q: "¿Cómo recibo reservaciones?", a: "Publica un servicio activo y configura sus días y horarios disponibles." },
+    { q: "¿Cómo recibo reservaciones?", a: "Configura el horario general de tu negocio y publica al menos un servicio activo." },
     { q: "¿Dónde administro las citas?", a: "En Agenda puedes revisar, confirmar, reagendar, completar o cancelar cada cita." },
-    { q: "¿Cómo cambio mis horarios?", a: "En Mis servicios, selecciona Editar y ajusta la disponibilidad semanal." },
+    { q: "¿Cómo cambio mis horarios?", a: "En Mi perfil ajusta el horario general; se aplicará a todos tus servicios." },
   ],
 };
 

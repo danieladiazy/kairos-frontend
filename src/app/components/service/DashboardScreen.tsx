@@ -2,6 +2,7 @@ import { Calendar, DollarSign, Loader2, Package, Users } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { agendaDelNegocio, listarServiciosDeNegocio, obtenerMiNegocio, type Cita, type Servicio } from "../../lib/api";
 import { parseAppointmentDateTime, todayDateOnly } from "../../lib/date";
+import { precioParaCita } from "../../lib/pricing";
 
 export function DashboardScreen({ onOpenAgenda }: { onOpenAgenda: () => void }) {
   const [citas, setCitas] = useState<Cita[]>([]);
@@ -25,7 +26,7 @@ export function DashboardScreen({ onOpenAgenda }: { onOpenAgenda: () => void }) 
       next,
       services: servicios.filter((servicio) => servicio.activo !== false).length,
       clients: new Set(active.map((cita) => cita.cliente?.id).filter(Boolean)).size,
-      income: citas.filter((cita) => cita.estado === "COMPLETADA").reduce((sum, cita) => sum + Number(cita.servicio?.precio || 0), 0),
+      income: citas.filter((cita) => cita.estado === "COMPLETADA").reduce((sum, cita) => sum + precioParaCita(cita), 0),
     };
   }, [citas, servicios, today]);
 

@@ -1,8 +1,9 @@
 import { Calendar, ChevronRight, Clock, DollarSign, FileText, MapPin, User, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { Cita, EstadoCita } from "../lib/api";
+import { obtenerSesion, type Cita, type EstadoCita } from "../lib/api";
 import { parseAppointmentDateTime, todayDateOnly } from "../lib/date";
+import { aplicarDescuentoEmpresa, esClienteEmpresa } from "../lib/pricing";
 import { ConfirmDialog } from "./ConfirmDialog";
 
 const LABEL:Record<EstadoCita,string>={PENDIENTE:"Pendiente",CONFIRMADA:"Confirmada",CANCELADA:"Cancelada",COMPLETADA:"Completada"};
@@ -30,6 +31,8 @@ export function AppointmentDetailModal({cita,actor,onClose,onCancel,onStatus,onR
   const active=cita.estado==="PENDIENTE"||cita.estado==="CONFIRMADA";
   const hasPassed=parseAppointmentDateTime(cita.fecha,cita.hora).getTime()<Date.now();
   const canManage=active&&!hasPassed;
+  const aplicaDescuento=actor==="cliente"?esClienteEmpresa(obtenerSesion().rol):esClienteEmpresa(cita.cliente?.rol);
+  const precioFinal=aplicarDescuentoEmpresa(Number(cita.servicio?.precio||0),aplicaDescuento);
   return <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-3 sm:p-4"><div className="relative bg-card border rounded-2xl p-4 sm:p-6 w-full max-w-lg max-h-[94dvh] sm:max-h-[90vh] overflow-y-auto space-y-5">
     <button onClick={onClose} aria-label="Cerrar" className="absolute right-4 top-4 z-10 rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"><X className="h-5 w-5"/></button>
     <span className={`inline-block px-3 py-1 rounded-full text-xs ${COLOR[cita.estado]}`}>{LABEL[cita.estado]}</span>
@@ -37,7 +40,7 @@ export function AppointmentDetailModal({cita,actor,onClose,onCancel,onStatus,onR
     <div className="grid sm:grid-cols-2 gap-3 text-sm">
       <p className="flex gap-2"><Calendar className="h-4 w-4 text-primary"/>{cita.fecha}</p>
       <p className="flex gap-2"><Clock className="h-4 w-4 text-primary"/>{cita.hora.slice(0,5)} · {cita.servicio?.duracionMinutos||0} min</p>
-      <p className="flex gap-2"><DollarSign className="h-4 w-4 text-primary"/>${Number(cita.servicio?.precio||0).toFixed(2)} MXN</p>
+      <p className="flex gap-2"><DollarSign className="h-4 w-4 text-primary"/><span>{aplicaDescuento&&<span className="mr-2 text-xs text-muted-foreground line-through">${Number(cita.servicio?.precio||0).toFixed(2)}</span>}<strong className={aplicaDescuento?"text-primary":""}>${precioFinal.toFixed(2)} MXN</strong>{aplicaDescuento&&<span className="ml-2 text-xs text-primary">10% menos</span>}</span></p>
       <p className="flex gap-2"><User className="h-4 w-4 text-primary"/>{actor==="cliente"?cita.servicio?.negocio?.nombre:(cita.cliente?.nombre||"Cliente")}</p>
       <p className="flex gap-2 sm:col-span-2"><FileText className="h-4 w-4 text-primary"/>{cita.notas||"Sin notas"}</p>
       <p className="flex gap-2 sm:col-span-2"><MapPin className="h-4 w-4 text-primary"/>{cita.servicio?.negocio?.direccion||"Dirección no registrada"}</p>

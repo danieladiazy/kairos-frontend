@@ -25,6 +25,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Footer } from "../Footer";
 import { reservarCita, type DiaSemana, type Negocio, type Servicio } from "../../lib/api";
+import { aplicarDescuentoEmpresa } from "../../lib/pricing";
 import { formatDateOnly, parseDateOnly, todayDateOnly } from "../../lib/date";
 
 interface BookingData {
@@ -40,6 +41,7 @@ interface BookingData {
 interface BookingScreenProps {
   servicio: Servicio | null;
   negocio: Negocio | null;
+  clienteAsociado: boolean;
   onBack: () => void;
   onConfirm: (data: BookingData) => void;
 }
@@ -48,7 +50,7 @@ const JS_DAY_TO_API: DiaSemana[] = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", 
 const toMinutes = (value: string) => { const [hours, minutes] = value.slice(0, 5).split(":").map(Number); return hours * 60 + minutes; };
 const toTime = (minutes: number) => `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
 
-export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingScreenProps) {
+export function BookingScreen({ servicio, negocio, clienteAsociado, onBack, onConfirm }: BookingScreenProps) {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -80,6 +82,8 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
     );
   }
 
+  const precioFinal = aplicarDescuentoEmpresa(servicio.precio, clienteAsociado);
+
   const handleConfirm = () => {
     if (selectedDate && selectedTime) setShowConfirmModal(true);
   };
@@ -105,7 +109,7 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
         date: formatDateOnly(selectedDate, { weekday: "long", day: "numeric", month: "long", year: "numeric" }),
         time: selectedTime,
         duration: `${servicio.duracionMinutos} min`,
-        price: Number(servicio.precio),
+        price: precioFinal,
         address: negocio.direccion || "",
       });
     } catch (err) {
@@ -168,7 +172,7 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
                 </div>
                 <div className="flex items-center justify-between pt-2 border-t border-border">
                   <span className="text-sm text-muted-foreground">Total</span>
-                  <span className="text-primary">${Number(servicio.precio)} MXN</span>
+                  <span className="text-right">{clienteAsociado && <span className="mr-2 text-xs text-muted-foreground line-through">${Number(servicio.precio).toFixed(2)}</span>}<span className="text-primary font-semibold">${precioFinal.toFixed(2)} MXN</span></span>
                 </div>
               </div>
 
@@ -215,7 +219,7 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
                 <p className="font-semibold">{servicio.nombre}</p>
                 <p className="text-sm text-muted-foreground mt-1">{servicio.duracionMinutos} min</p>
               </div>
-              <p className="text-primary font-semibold">${Number(servicio.precio)}</p>
+              <div className="text-right">{clienteAsociado && <><span className="block text-xs text-muted-foreground line-through">${Number(servicio.precio).toFixed(2)}</span><span className="block text-xs text-primary">10% de descuento</span></>}<p className="text-primary font-semibold">${precioFinal.toFixed(2)}</p></div>
             </div>
           </div>
 
@@ -275,7 +279,7 @@ export function BookingScreen({ servicio, negocio, onBack, onConfirm }: BookingS
               </div>
               <div className="flex items-center justify-between text-lg">
                 <span>Total</span>
-                <span className="text-primary font-semibold">${Number(servicio.precio)} MXN</span>
+                <span className="text-right">{clienteAsociado && <span className="mr-2 text-sm text-muted-foreground line-through">${Number(servicio.precio).toFixed(2)}</span>}<span className="text-primary font-semibold">${precioFinal.toFixed(2)} MXN</span></span>
               </div>
             </div>
 

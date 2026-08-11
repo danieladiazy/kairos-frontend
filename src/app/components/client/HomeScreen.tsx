@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { ArrowRight, Building2, Clock, Loader2, Search } from "lucide-react";
-import { buscarServicios, type Servicio } from "../../lib/api";
+import { buscarServicios, type AsociacionEmpresa, type Servicio } from "../../lib/api";
 import { aplicarDescuentoEmpresa } from "../../lib/pricing";
 import { Footer } from "../Footer";
 
@@ -8,12 +8,13 @@ interface Props {
   onNavigate: (screen:string) => void;
   isLoggedIn: boolean;
   clienteAsociado: boolean;
+  asociacionEmpresa?: AsociacionEmpresa | null;
   onNavigateToLogin?: () => void;
   onShowHelp?: () => void;
   onNavigateToService?: (id:number) => void;
 }
 
-export function HomeScreen({ onNavigate, isLoggedIn, clienteAsociado, onNavigateToLogin, onShowHelp, onNavigateToService }:Props) {
+export function HomeScreen({ onNavigate, isLoggedIn, clienteAsociado, asociacionEmpresa, onNavigateToLogin, onShowHelp, onNavigateToService }:Props) {
   const [servicios,setServicios] = useState<Servicio[]>([]);
   const [query,setQuery] = useState("");
   const [loading,setLoading] = useState(true);
@@ -50,6 +51,8 @@ export function HomeScreen({ onNavigate, isLoggedIn, clienteAsociado, onNavigate
     </section>
 
     <main className="max-w-7xl mx-auto p-4 sm:p-6 space-y-8">
+      {asociacionEmpresa?.estado === "PENDIENTE" && <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-900"><strong>Asociación pendiente con {asociacionEmpresa.negocioNombre}</strong><p className="mt-1 text-sm">Mientras el negocio revisa tu solicitud puedes utilizar Kairós como cliente normal. El descuento todavía no está activo.</p></div>}
+      {asociacionEmpresa?.estado === "RECHAZADA" && <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800"><strong>La asociación no fue aprobada por {asociacionEmpresa.negocioNombre}</strong><p className="mt-1 text-sm">Tu cuenta continúa funcionando como cliente normal y no aplica el descuento empresarial.</p></div>}
       <div className="flex items-end justify-between gap-4"><div><h2>Servicios disponibles</h2><p className="text-muted-foreground">Encuentra una opción que se adapte a ti</p></div><button onClick={()=>onNavigate("search")} className="shrink-0 flex items-center gap-2 text-primary">Ver todos <ArrowRight className="h-4 w-4"/></button></div>
       {loading && <div className="py-16 flex justify-center gap-2 text-muted-foreground"><Loader2 className="animate-spin"/>Cargando servicios...</div>}
       {error && <div className="border border-destructive/30 bg-destructive/10 rounded-xl p-6 text-center"><p className="text-destructive">{error}</p><button onClick={()=>location.reload()} className="mt-3 underline">Intentar de nuevo</button></div>}

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Calendar, HelpCircle, LayoutDashboard, LogOut, Package, User } from "lucide-react";
+import { Calendar, HelpCircle, LayoutDashboard, LogOut, Package, User, UserCheck } from "lucide-react";
 import { AgendaScreen } from "./AgendaScreen";
 import { DashboardScreen } from "./DashboardScreen";
 import { ProfileScreen } from "./ProfileScreen";
 import { ServicesScreen } from "./ServicesScreen";
+import { BusinessAssociationsScreen } from "./BusinessAssociationsScreen";
 import { ConfirmDialog } from "../ConfirmDialog";
 import { FaqDialog } from "../FaqDialog";
 import { KairosBrand } from "../KairosBrand";
@@ -17,9 +18,10 @@ export function ServiceDashboard({ onLogout }: { onLogout: () => void }) {
     { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { id: "agenda", icon: Calendar, label: "Agenda" },
     { id: "services", icon: Package, label: "Mis servicios" },
+    { id: "associations", icon: UserCheck, label: "Solicitudes" },
     { id: "profile", icon: User, label: "Mi perfil" },
   ];
-  const content = panel === "agenda" ? <AgendaScreen /> : panel === "services" ? <ServicesScreen /> : panel === "profile" ? <ProfileScreen /> : <DashboardScreen onOpenAgenda={() => setPanel("agenda")} />;
+  const content = panel === "agenda" ? <AgendaScreen /> : panel === "services" ? <ServicesScreen /> : panel === "associations" ? <BusinessAssociationsScreen /> : panel === "profile" ? <ProfileScreen /> : <DashboardScreen onOpenAgenda={() => setPanel("agenda")} />;
 
   return <div className="h-[100dvh] lg:h-screen flex flex-col lg:flex-row bg-background overflow-hidden">
     <MobileTopBar subtitle="Panel de negocio" onHelp={() => setShowHelp(true)} onLogout={() => setConfirmLogout(true)} />

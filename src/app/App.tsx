@@ -47,12 +47,12 @@ export default function App() {
     const titulo = type === "service"
       ? "Bienvenido a tu panel"
       : type === "company-client"
-        ? "Bienvenido a tus beneficios empresariales"
+        ? "Bienvenido a Kairós"
         : "¡Bienvenido de vuelta!";
     const descripcion = type === "service"
       ? "Accediste como negocio."
       : type === "company-client"
-        ? "Tu cuenta tiene 10% de descuento en los servicios."
+        ? "Consultaremos el estado de tu asociación empresarial."
         : "Sesión iniciada correctamente.";
     setTimeout(() => toast.success(titulo, {
       description: descripcion,

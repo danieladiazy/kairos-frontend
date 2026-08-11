@@ -166,7 +166,23 @@ export interface Cita {
   estado: EstadoCita;
   notas?: string;
   servicio?: Servicio;
-  cliente?: { id: number; nombre: string; rol?: Rol };
+  cliente?: { id: number; nombre: string; rol?: Rol; descuentoEmpresarialActivo?: boolean };
+}
+
+export type EstadoAsociacionEmpresa = "PENDIENTE" | "APROBADA" | "RECHAZADA";
+
+export interface AsociacionEmpresa {
+  id: number;
+  clienteId: number;
+  clienteNombre: string;
+  clienteEmail: string;
+  clienteTelefono?: string;
+  negocioId: number;
+  negocioNombre: string;
+  estado: EstadoAsociacionEmpresa;
+  descuentoActivo: boolean;
+  solicitadoEn: string;
+  respondidoEn?: string;
 }
 
 // ---------- Autenticacion ----------
@@ -179,6 +195,7 @@ export async function registrar(datos: {
   password: string;
   telefono?: string;
   rol: Rol;
+  negocioId?: number;
 }): Promise<AuthResponse> {
   const resultado = await request<AuthResponse>("/auth/registro", {
     method: "POST",
@@ -245,6 +262,21 @@ export function guardarMiNegocio(datos: {
 
 export function obtenerMiNegocio() {
   return request<Negocio>("/negocios/mi-negocio");
+}
+
+export async function obtenerEstadoAsociacionEmpresa() {
+  const resultado = await request<AsociacionEmpresa | undefined>("/asociaciones-empresa/mi-estado");
+  return resultado || null;
+}
+
+export function listarSolicitudesAsociacionEmpresa() {
+  return request<AsociacionEmpresa[]>("/asociaciones-empresa/solicitudes-negocio");
+}
+
+export function responderSolicitudAsociacionEmpresa(id: number, estado: "APROBADA" | "RECHAZADA") {
+  return request<AsociacionEmpresa>(`/asociaciones-empresa/${id}/estado?estado=${estado}`, {
+    method: "PATCH",
+  });
 }
 
 // ---------- Servicios ----------

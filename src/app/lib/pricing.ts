@@ -15,7 +15,7 @@ export function aplicarDescuentoEmpresa(precio: number, aplica: boolean): number
 export function precioParaCita(cita: Cita): number {
   return aplicarDescuentoEmpresa(
     Number(cita.servicio?.precio || 0),
-    esClienteEmpresa(cita.cliente?.rol),
+    cita.cliente?.descuentoEmpresarialActivo === true,
   );
 }
 

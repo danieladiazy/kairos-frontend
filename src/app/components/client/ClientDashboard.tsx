@@ -12,8 +12,8 @@ import { ConfirmDialog } from "../ConfirmDialog";
 import { FaqDialog } from "../FaqDialog";
 import { KairosBrand } from "../KairosBrand";
 import { MobileBottomNav, MobileTopBar } from "../MobileNavigation";
-import type { Negocio, Servicio } from "../../lib/api";
-import { obtenerServicio, obtenerSesion } from "../../lib/api";
+import type { AsociacionEmpresa, Negocio, Servicio } from "../../lib/api";
+import { obtenerEstadoAsociacionEmpresa, obtenerServicio, obtenerSesion } from "../../lib/api";
 import { toast } from "sonner";
 import { FOOTER_CATEGORY_EVENT, FOOTER_COMING_SOON_EVENT } from "../../lib/navigationEvents";
 import { esClienteEmpresa } from "../../lib/pricing";
@@ -37,7 +37,9 @@ interface BookingData {
 }
 
 export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: ClientDashboardProps) {
-  const clienteAsociado = esClienteEmpresa(obtenerSesion().rol);
+  const cuentaEmpresarial = esClienteEmpresa(obtenerSesion().rol);
+  const [asociacionEmpresa, setAsociacionEmpresa] = useState<AsociacionEmpresa | null>(null);
+  const clienteAsociado = cuentaEmpresarial && asociacionEmpresa?.descuentoActivo === true;
   const [activePanel, setActivePanel] = useState<ClientPanel>("home");
   const [prevPanel, setPrevPanel] = useState<ClientPanel>("home");
   const [showHelp, setShowHelp] = useState(false);
@@ -48,6 +50,13 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
   const [negocioParaReservar, setNegocioParaReservar] = useState<Negocio | null>(null);
   const [searchCategory, setSearchCategory] = useState("");
   const [comingSoonTitle, setComingSoonTitle] = useState("Esta sección");
+
+  useEffect(() => {
+    if (!cuentaEmpresarial) return;
+    obtenerEstadoAsociacionEmpresa()
+      .then(setAsociacionEmpresa)
+      .catch((reason) => toast.error(reason instanceof Error ? reason.message : "No se pudo consultar tu asociación"));
+  }, [cuentaEmpresarial]);
 
   useEffect(() => {
     const openCategory = (event: Event) => {
@@ -153,14 +162,14 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
       case "coming-soon":
         return <ComingSoonScreen title={comingSoonTitle} onBack={goBack} />;
       default:
-        return <HomeScreen isLoggedIn={isLoggedIn} clienteAsociado={clienteAsociado} onNavigate={navigate} onNavigateToLogin={() => onNavigateToLogin(false)} onShowHelp={() => setShowHelp(true)} onNavigateToService={(id) => { setSelectedServicioId(id); navigate("service-detail"); }} />;
+        return <HomeScreen isLoggedIn={isLoggedIn} clienteAsociado={clienteAsociado} asociacionEmpresa={asociacionEmpresa} onNavigate={navigate} onNavigateToLogin={() => onNavigateToLogin(false)} onShowHelp={() => setShowHelp(true)} onNavigateToService={(id) => { setSelectedServicioId(id); navigate("service-detail"); }} />;
     }
   };
 
   return (
     <div className="h-[100dvh] lg:h-screen flex flex-col lg:flex-row bg-background overflow-hidden">
       <MobileTopBar
-        subtitle={clienteAsociado ? "Cliente empresarial · 10% de descuento" : isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
+        subtitle={clienteAsociado ? "Cliente empresarial · 10% de descuento" : cuentaEmpresarial ? asociacionEmpresa?.estado === "RECHAZADA" ? "Cliente · asociación no aprobada" : "Cliente · asociación pendiente" : isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
         onHelp={() => setShowHelp(true)}
         onLogout={isLoggedIn ? () => setConfirmLogout(true) : undefined}
       />
@@ -170,7 +179,7 @@ export function ClientDashboard({ isLoggedIn, onLogout, onNavigateToLogin }: Cli
         <div className="p-5 border-b border-border flex-shrink-0">
           <KairosBrand size="md" />
           <p className="text-sm text-muted-foreground mt-1 truncate">
-            {clienteAsociado ? "Cuenta empresarial · 10% menos" : isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
+            {clienteAsociado ? "Cuenta empresarial · 10% menos" : cuentaEmpresarial ? asociacionEmpresa?.estado === "RECHAZADA" ? "Asociación empresarial no aprobada" : "Asociación empresarial pendiente" : isLoggedIn ? `Bienvenido, ${obtenerSesion().nombre || ""}` : "Descubre servicios"}
           </p>
         </div>
 
